@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d1827">
+  <title>Backup Monitoring · PX Server</title>
+  <link rel="icon" type="image/png" href="/tab-logo.png">
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/branding.css">
+</head>
+<body>
+  <div id="login" class="login-screen hidden">
+    <form id="login-form" class="login-card">
+      <div class="brand-mark">B<span>·</span></div>
+      <p class="eyebrow">PX SERVER / SECURE ACCESS</p>
+      <h1>Welcome back.</h1>
+      <p>Sign in to manage your server backups.</p>
+      <label for="password">Dashboard password</label>
+      <input id="password" type="password" autocomplete="current-password" required autofocus>
+      <button class="button primary full" type="submit">Open dashboard <span aria-hidden="true">→</span></button>
+      <div id="login-error" class="form-error" role="alert"></div>
+    </form>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">B<span>·</span></div><div><strong>Backup</strong><small>MONITORING</small></div></div>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav aria-label="Main navigation">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span> Overview</button>
+        <button class="nav-item" data-view="jobs"><span class="nav-icon">▤</span> Backup jobs <span id="job-count" class="nav-count">0</span></button>
+        <button class="nav-item" data-view="history"><span class="nav-icon">◷</span> Activity history</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="server-card"><div class="server-dot"></div><div><strong>PX Server</strong><small>192.168.10.8</small></div></div>
+        <button id="logout" class="logout">↳ <span>Sign out</span></button>
+      </div>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar"><div class="crumb">Workspace <span>/</span> <strong id="crumb-title">Overview</strong></div><div class="topbar-right"><span id="clock"></span><div class="avatar">PX</div></div></header>
+      <main>
+        <section class="page-head"><div><p class="eyebrow">BACKUP CONTROL CENTER</p><h1 id="page-title">Overview</h1><p id="page-subtitle">A clear view of your data protection.</p></div><button id="new-job" class="button primary"><span class="plus">＋</span> New backup job</button></section>
+
+        <section id="overview-view" class="view">
+          <div class="hero"><div><div class="hero-kicker"><span class="pulse-dot"></span> SERVER BACKUP STATUS</div><h2 id="hero-title">Checking your backups...</h2><p id="hero-copy">Your latest run and upcoming schedule appear here.</p><button id="hero-action" class="hero-link">View backup jobs <span>↗</span></button></div><div class="hero-art" aria-hidden="true"><div class="art-ring outer"></div><div class="art-ring middle"></div><div class="art-ring inner"><span>✓</span></div><div class="art-spark one"></div><div class="art-spark two"></div></div></div>
+          <div class="stats"><div class="stat-card"><div class="stat-label">Total backup jobs <span class="stat-icon">▤</span></div><div id="stat-jobs" class="stat-value">—</div><p>Folders in your plan</p></div><div class="stat-card"><div class="stat-label">Last backup <span class="stat-icon">◷</span></div><div id="stat-last" class="stat-value smaller">—</div><p id="stat-last-detail">No runs yet</p></div><div class="stat-card"><div class="stat-label">Next scheduled <span class="stat-icon">↗</span></div><div id="stat-next" class="stat-value smaller">—</div><p id="stat-next-detail">No schedule</p></div><div class="stat-card"><div class="stat-label">External USB <span class="stat-icon">▣</span></div><div id="stat-usb" class="stat-value smaller">Checking</div><p id="stat-usb-detail">H: / EXTERNAL_USB</p></div></div>
+          <div class="section-row"><div><h2>Backup jobs</h2><p>Keep track of the folders protected on your USB drive.</p></div><button class="text-button" data-go="jobs">View all jobs <span>→</span></button></div>
+          <div id="overview-jobs" class="job-list"></div>
+          <div class="section-row history-heading"><div><h2>Recent activity</h2><p>See exactly what happened during each run.</p></div><button class="text-button" data-go="history">Full history <span>→</span></button></div>
+          <div id="overview-history" class="table-wrap"></div>
+        </section>
+
+        <section id="jobs-view" class="view hidden"><div class="info-banner"><span>▣</span><div><strong>Backup destination</strong><p>Each job copies into its own folder on H:\BackupMonitoring. Existing USB files are left in place.</p></div></div><div id="all-jobs" class="job-list"></div></section>
+
+        <section id="history-view" class="view hidden"><div class="history-tools"><div><strong>All backup activity</strong><p>Start times, finish times, outcomes, and detailed logs.</p></div><select id="history-filter" aria-label="Filter activity"><option value="all">All outcomes</option><option value="success">Successful</option><option value="warning">Warnings</option><option value="failed">Errors</option><option value="running">Running</option></select></div><div id="all-history" class="table-wrap"></div></section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="job-dialog" class="dialog"><form id="job-form"><div class="dialog-head"><div><p class="eyebrow">NEW BACKUP JOB</p><h2>Protect a folder</h2><p>Choose what to copy and when it should run.</p></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><div class="form-body"><label for="job-name">Job name</label><input id="job-name" placeholder="e.g. Client files" maxlength="80" required><label for="job-source">Source folder</label><div class="input-action"><input id="job-source" placeholder="F:\FILES" required><button type="button" id="browse-button">Browse</button></div><small>Select a folder on C:, E:, or F:.</small><div class="form-grid"><div><label for="job-frequency">Frequency</label><select id="job-frequency"><option value="daily">Every day</option><option value="weekly">Every week</option><option value="monthly">Every month</option></select></div><div><label for="job-time">Start time</label><input id="job-time" type="time" value="22:00" required></div></div><div id="weekday-wrap" class="hidden"><label for="job-weekday">Day of week</label><select id="job-weekday"><option value="0">Monday</option><option value="1">Tuesday</option><option value="2">Wednesday</option><option value="3">Thursday</option><option value="4">Friday</option><option value="5">Saturday</option><option value="6">Sunday</option></select></div><div id="monthday-wrap" class="hidden"><label for="job-monthday">Day of month</label><input id="job-monthday" type="number" min="1" max="31" value="1"><small>For shorter months, the job runs on the last day.</small></div><div id="job-error" class="form-error" role="alert"></div></div><div class="dialog-foot"><button type="button" class="button secondary" data-close>Cancel</button><button type="submit" class="button primary">Create backup job</button></div></form></dialog>
+  <dialog id="browse-dialog" class="dialog browse-dialog"><div class="dialog-head"><div><p class="eyebrow">SERVER FOLDERS</p><h2>Choose a folder</h2><p id="browse-path">Select a drive to begin.</p></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><div id="browse-list" class="browse-list"></div><div class="dialog-foot"><button type="button" class="button secondary" id="browse-back">← Back</button><button type="button" class="button primary" id="browse-select">Use this folder</button></div></dialog>
+  <dialog id="log-dialog" class="dialog log-dialog"><div class="dialog-head"><div><p class="eyebrow">BACKUP DETAILS</p><h2 id="log-title">Run log</h2><p id="log-subtitle"></p></div><button type="button" class="close-button" data-close aria-label="Close">×</button></div><pre id="log-content"></pre><div class="dialog-foot"><button type="button" class="button secondary" data-close>Close</button></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>

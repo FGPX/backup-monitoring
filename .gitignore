@@ -1,0 +1,18 @@
+# Server-specific data: never publish backup history, logs, or login material.
+data/
+*.db
+*.sqlite*
+*.log
+initial-password.txt
+install-result.json
+
+# Local/server deployment snapshots and Python cache.
+.deploy-*/
+__pycache__/
+*.py[cod]
+
+# Local editor and OS files.
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
